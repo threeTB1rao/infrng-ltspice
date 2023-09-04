@@ -1,0 +1,289 @@
+
+* Distributed as-is, unmodified, and at no charge by
+* www.spicemodel.com 
+* accuracy should be verified by user
+* 
+* AD822A  SPICE Macro-model             2/95, Rev. A
+*                                       ARG / ADSC
+*
+* This version of the AD822 model simulates the worst-case
+* parameters of the 'A' grade. The worst-case parameters
+* used correspond to those in the data sheet.
+*
+* Copyright 1995 by Analog Devices, Inc.
+*
+* Refer to "README.DOC" file for License Statement.
+* Use of this model indicates your acceptance with 
+* the terms and provisions in the License Statement.
+*
+* Node assignments
+*                   non-inverting input
+*                   | inverting input
+*                   | | positive supply
+*                   | | |  negative supply
+*                   | | |  |  output
+*                   | | |  |  |
+.SUBCKT AD822A   1 2 99 50 25
+*
+* INPUT STAGE & POLE AT 5MHZ
+*
+R3 5 99 2456
+R4 6 99 2456
+CIN 1 2 5E-12
+C2 5 6 6.48E-12
+I1 4 50 108E-6
+IOS 1 2 1E-11
+EOS 7 1 POLY(1) (12,98) 800E-6 2.41
+J1 5 2 4 JX
+J2 6 7 4 JX
+GB1 50 2 POLY(3) (2,4) (2,5) (2,50) 0 1E-12 1E-12 1E-12
+GB2 50 7 POLY(3) (7,4) (7,5) (7,50) 0 1E-12 1E-12 1E-12
+*
+EREF 98 0 (30,0) 1
+*
+* GAIN STAGE & POLE AT 25 HZ
+*
+R5 9 98 1.234E6
+C3 9 25 32E-12
+G1 98 9 (6,5) 4.07E-4
+V1 8 98 0
+V2 98 10 -1
+D1 9 10 DX
+D2 8 9 DX
+*
+* COMMON-MODE GAIN NETWORK WITH ZERO AT 5 KHZ
+*
+R21 11 12 1E6
+R22 12 98 200
+C14 11 12 32.25E-12
+E13 11 98 POLY(2) (2,98) (1,98) 0 0.5 0.5
+*
+* POLE AT 10 MHZ
+*
+R23 18 98 1E6
+C15 18 98 15.9E-15
+G15 98 18 (9,98) 1E-6
+*
+* OUTPUT STAGE
+*
+ES 26 51 POLY(1) (18,98) 1.72 1
+RS 26 22 500
+V3 23 51 1.03951
+V4 21 23 1.36
+C16 20 25 2E-12
+C17 24 25 2E-12
+RG1 20 97 1E8
+RG2 24 97 1E8
+Q1 20 20 97 PNP
+Q2 20 21 22 NPN
+Q3 24 23 22 PNP
+Q4 24 24 51 NPN
+Q5 25 20 97 PNP 20
+Q6 25 24 51 NPN 20
+VP 96 97 0
+VN 51 52 0
+EP 96 0 POLY(1) (99,0) 0.01 1
+EN 52 0 POLY(1) (50,0) -0.015 1
+R25 30 99 275E3
+R26 30 50 275E3
+FSY1 99 0 POLY(1) VP 210.5E-6 1
+FSY2 0 50 POLY(1) VN 210.5E-6 1
+*
+* MODELS USED
+*
+.MODEL JX NJF(BETA=7.67E-4 VTO=-2.000 IS=12.5E-12)
+.MODEL NPN NPN(BF=120 VAF=150 VAR=15 RB=2E3 RE=4 RC=200)
+.MODEL PNP PNP(BF=120 VAF=150 VAR=15 RB=2E3 RE=4 RC=900)
+.MODEL DX D(IS=1E-15)
+.ENDS
+*
+*---------------------------------------------------------------------------
+*
+*  Analog Devices SPICE Macro-model Library    
+*  
+*  Copyright 2001 by Analog Devices, Inc.
+*  
+*  LICENSE STATEMENT
+*  
+*  The information on this diskette is protected under the
+*  United States copyright laws.  Analog Devices, Inc. ("ADI")
+*  hereby grants users of these macro-models hereto referred
+*  to as licensee, a nonexclusive, nontransferable license to
+*  use these macro-models as long as the licensee abides by
+*  the terms of this agreement.  Before using the macro-
+*  models, the licensee should read this license.  If the
+*  licensee does not accept these terms, this diskette should
+*  be returned to ADI within 30 days.
+*  
+*  The licensee may not sell, loan, rent, lease, or license
+*  the macro-models, in whole, in part, or in modified form,
+*  to anyone outside the licensee's company.  The licensee
+*  may modify these macro-models to suit his specific
+*  applications, and the licensee may make copies of this 
+*  diskette or macromodels for use within his company only.
+*  
+*  These macro-models are provided "AS IS, WHERE IS, AND WITH
+*  NO WARRANTY OF ANY KIND EITHER EXPRESSED OR IMPLIED, 
+*  INCLUDING BUT NOT LIMITED TO ANY IMPLIED WARRANTIES OF
+*  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE."
+*  
+*  In no event will ADI be liable for special, collateral,
+*  incidental, or consequential damages in connection with or
+*  arising out of the use of these macro-models.  ADI
+*  reserves the right to make changes to the products and the
+*  macro-models without prior notice.
+*  
+*  
+* APPLICATIONS INFORMATION
+*  
+* The SPICE macro-models on this diskette, as of the above
+* release date, are the most current for Analog Devices
+* products.  As more models are completed, new
+* releases of this diskette will be issued.  With Release
+* K, the ADSpice library now has 446 macromodels, which is
+* an increase of 18 models over Release J.
+* 
+* The model library contains many types of models in addition
+* to op amps.  The types of models are:  op amps, instrumentation
+* amplifiers, references, switches, variable gain amplifiers, 
+* multipliers, matched transistors, buffers, and a balanced line
+* receiver.
+* 
+* All the models have an advanced architecture that allows
+* for multiple poles and zeros to model accurately the AC
+* and transient response of the device.  Unique to ADI, the
+* following models contain noise sources, allowing SPICE 
+* analysis of the total noise of a circuit:
+* 
+*        AD581                    AD584
+*        AD587                    AD588
+*        AD645                    AD680
+*        AD712                    AD743
+*        AD745                    AD780
+*        AD797                    OP113
+*        OP176                    OP177
+*        OP213                    OP27
+*        OP275                    OP285
+*        OP37                      OP413
+*        OP77                      REF01
+*        REF02                    REF05
+*        REF10                    SSM2017
+*        AD795                    OP284
+*        AD603                    SSM2135
+*        
+* 
+* For more information on the ADSpice models, please contact
+* the ADI literature department and request the following
+* application notes:
+* 
+* AN110, AN117, AN120, AN126, AN132, and AN138
+* 
+* Contact:   Analog Devices, Inc.
+*                  Literature Dept.
+*         One Technology Way
+*         PO Box   9106
+*         Norwood, MA 02062      USA
+* 
+* Phone:   (800) ANALOGD  (262-5643)
+* 
+* MODEL REVISIONS
+* 
+* Some of the models have been revised since the last release
+* the diskette.  If a model was revised, the release letter
+* on the first line of the file was changed, and the
+* revisions are documented in the comments at the beginning
+* of the net-list file.
+* 
+* In addition, the hyphen from the names of the models 
+* has been removed to avoid confusion between the file name
+* and the model name.  This was done for almost all of the
+* models.
+*           
+* OPEN-LOOP GAIN AND PHASE
+* 
+* A common mistake in simulating an amplifier's open-loop
+* gain and phase performance is to run the model open-loop. 
+* Like the actual device, without feedback, even a small
+* amount of offset can cause the circuit to saturate to
+* either supply rail.  Because of the saturation, the model
+* gives a much lower open-loop gain.  Thus, the model needs
+* to be run closed-loop.  Typically, the easiest way to do
+* this is to run the model in an inverting op amp
+* configuration and have SPICE plot the log of the output
+* minus the log of the inverting input.
+* 
+* TRANSIENT ANALYSIS
+* 
+* One of the most difficult problems in using SPICE is
+* convergence.  As the number of nodes increases, so do the
+* calculations needed for convergence.  If the analysis
+* quits due to non-convergence, then adding the following
+* line to the circuit net-list will help in most cases:
+* 
+*         .OPTIONS  ITL4=40
+* 
+* This increases the number of iterations from the default
+* of 10 to 40.  The SPICE simulator will then make 40
+* iterations to try to find the next point of the transient
+* solution before going to a smaller time step.
+* 
+* NEGATIVE CAPACITANCE
+* 
+* Some SPICE simulators do not allow the use of a negative
+* capacitor, which is used in some macro-models to properly
+* shape the frequency response.  Those simulators will
+* issue an error message stating that the negative
+* capacitor is not permissible.  When this problem is
+* encountered, change the sign of the negative capacitor to
+* positive.  Then, change the signs of the two resistors in
+* the same stage to negative.   
+* 
+* POWER DISSIPATION
+* 
+* All models accurately model the supply current of the
+* part including the output current.  To calculate the
+* power dissipation of the circuit, the supply current
+* should be multiplied by the supply voltage.  This may
+* give a different number compared to the total power
+* dissipation printed at the end of all SPICE ".OUT" files. 
+* The discrepancy is due to higher than normal internal 
+* currents, which are not added to the supply current.  
+* The noise models are especially affected by this because 
+* of the large currents in the internal stages needed to 
+* keep the noise low.  Thus, always use the actual supply 
+* currents to calculate the total power dissipation and do 
+* not use SPICE's printed power dissipation in the ".OUT"
+* file.
+* 
+*
+*  -------------------------------------------------------------------------
+*
+* * OP AMP MODEL TEST CIRCUIT
+* *
+* *  This net-list will test the OP-42 model in a simple
+* *  inverting gain of -1 circuit.  Three different types
+* *  of waveforms will be simulated:  DC, AC and transient.
+* *  This file can be used as direct input to your SPICE
+* *  simulator software.
+* *  To look at the output, enter "TYPE EXAMPLE.OUT"
+* *  An output file generated using PSpice 6.0 is saved
+* *  in the file "COMPARE.OUT" to check your output.
+* *
+* X1   0   2   4   5   3   OP42
+* RIN  1   2   2K
+* RF   3   2   2K
+* VP   4   0   DC 15
+* VN   5   0   DC -15
+* VIN  1   0   DC 0 AC 1 PULSE(-100M 100M 0 5N 5N 1U 2U)
+* .DC VIN -10 10 1
+* .PRINT DC V(3)
+* .AC DEC 10 10K 100MEG
+* .PLOT AC VM(3) VP(3)
+* .TRAN 20N 2U
+* .PLOT TRAN V(3)
+* .INC OP42.CIR
+* .END
+*
+* ----------------------------------------------------------------------------
+*
+
